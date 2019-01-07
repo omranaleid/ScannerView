@@ -11,13 +11,17 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var flashBtn: UIButton!
     @IBOutlet weak var vedioView: UIView!
-    var scanView:ScanView?
+    
+    @IBOutlet weak var scanView: ScanView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // make sure that you add (Privacy - Camera Usage Description) to info.plist file
         // create object from view
-        scanView = ScanView(frame: vedioView.frame, overlayView: vedioView, delegate: self,scanObjectType:.qr)
+//        scanView = ScanView(frame: vedioView.frame, overlayView: vedioView,scanObjectType:.qr)
+        scanView.type = .qr
+        scanView?.delegate = self
         // add it to man view
         self.view.addSubview(scanView!)
         scanView?.center = self.view.center

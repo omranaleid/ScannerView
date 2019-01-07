@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VTu-fz-kOM">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VTu-fz-kOM" customClass="ScanView" customModule="ScanQR" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="218.5" width="375" height="250"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="line" translatesAutoresizingMaskIntoConstraints="NO" id="3d9-QW-X1d">
@@ -61,6 +61,7 @@
                     </view>
                     <connections>
                         <outlet property="flashBtn" destination="Evc-ix-clO" id="ARI-Mw-mJS"/>
+                        <outlet property="scanView" destination="VTu-fz-kOM" id="BAC-rM-PPj"/>
                         <outlet property="vedioView" destination="VTu-fz-kOM" id="JIo-Le-V97"/>
                     </connections>
                 </viewController>

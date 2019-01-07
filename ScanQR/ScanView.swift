@@ -14,34 +14,32 @@ enum FlashStatus{
     case off
 }
 
-protocol ScanDelegate {
+protocol ScanDelegate: class {
     func didScanedBarCode(value:String)
     func didStartCapture(start:Bool,error:String?)
     func didStopCapture(stop:Bool,error:String?)
     func didChangeFlashStatus(status:FlashStatus)
 }
 
-class ScanView: UIView,AVCaptureMetadataOutputObjectsDelegate {
+@IBDesignable open class ScanView: UIView,AVCaptureMetadataOutputObjectsDelegate {
 
     private var captureSession:AVCaptureSession?
     private var videoPreviewLayer:AVCaptureVideoPreviewLayer?
     private var device:AVCaptureDevice?
     var overlayView:UIView?
-    var delegate:ScanDelegate?
+    weak var delegate:ScanDelegate?
     var isFlashOn = false
     var isScanning : Bool = false
     var type:AVMetadataObject.ObjectType = .qr
-    
-    init(frame:CGRect,overlayView:UIView?,delegate:ScanDelegate,scanObjectType:AVMetadataObject.ObjectType = .qr) {
-        super.init(frame: frame)
-        self.delegate = delegate
-        self.overlayView = overlayView
-        self.type = scanObjectType
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+//
+//    init(frame:CGRect,overlayView:UIView?,scanObjectType:AVMetadataObject.ObjectType = .qr) {
+//        super.init(frame: frame)
+//        self.overlayView = overlayView
+//        self.type = scanObjectType
+//    }
+//
+  
+
     
     func configureVedioSession(onSuccess:()-> Void,onFailur:(String)->Void)  {
         if let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) {
@@ -76,7 +74,7 @@ class ScanView: UIView,AVCaptureMetadataOutputObjectsDelegate {
         }
     }
 
-    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+    public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         if metadataObjects.count == 0 {
             return
         }
@@ -93,6 +91,7 @@ class ScanView: UIView,AVCaptureMetadataOutputObjectsDelegate {
             }
         }
     }
+
     
     func startRunning() {
         isScanning = true
