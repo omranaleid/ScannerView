@@ -15,7 +15,7 @@ enum FlashStatus{
 }
 
 protocol ScanDelegate: class {
-    func didScanedBarCode(value:String)
+    func didScanedCode(value:String)
     func didStartCapture(start:Bool,error:String?)
     func didStopCapture(stop:Bool,error:String?)
     func didChangeFlashStatus(status:FlashStatus)
@@ -30,18 +30,9 @@ protocol ScanDelegate: class {
     weak var delegate:ScanDelegate?
     var isFlashOn = false
     var isScanning : Bool = false
-    var type:AVMetadataObject.ObjectType = .qr
-//
-//    init(frame:CGRect,overlayView:UIView?,scanObjectType:AVMetadataObject.ObjectType = .qr) {
-//        super.init(frame: frame)
-//        self.overlayView = overlayView
-//        self.type = scanObjectType
-//    }
-//
-  
-
+    var types: [AVMetadataObject.ObjectType] = [.qr]
     
-    func configureVedioSession(onSuccess:()-> Void,onFailur:(String)->Void)  {
+    func configureVedioSession(onSuccess:() -> Void, onFailure: (String)->Void) {
         if let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) {
             device = captureDevice
             do {
@@ -51,7 +42,7 @@ protocol ScanDelegate: class {
                 let captureMetadataOutput = AVCaptureMetadataOutput()
                 captureSession?.addOutput(captureMetadataOutput)
                 captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-                captureMetadataOutput.metadataObjectTypes = [self.type]
+                captureMetadataOutput.metadataObjectTypes = self.types
                 videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
                 videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
                 videoPreviewLayer?.frame = self.layer.bounds
@@ -66,11 +57,11 @@ protocol ScanDelegate: class {
                 onSuccess()
                 isScanning = true
             } catch let error{
-                onFailur(error.localizedDescription)
+                onFailure(error.localizedDescription)
                 return
             }
         }else{
-            onFailur("no camera available")
+            onFailure("no camera available")
         }
     }
 
@@ -79,11 +70,11 @@ protocol ScanDelegate: class {
             return
         }
         let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-        if metadataObj.type == self.type {
+        if self.types.contains(metadataObj.type) {
             if metadataObj.stringValue != nil {
                 let value = metadataObj.stringValue
                 if let objectId = value {
-                    delegate?.didScanedBarCode(value: objectId)
+                    delegate?.didScanedCode(value: objectId)
                 }else{
                     print("error getting value")
                 }

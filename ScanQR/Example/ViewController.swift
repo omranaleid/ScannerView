@@ -20,7 +20,7 @@ class ViewController: UIViewController {
         // make sure that you add (Privacy - Camera Usage Description) to info.plist file
         // create object from view
 //        scanView = ScanView(frame: vedioView.frame, overlayView: vedioView,scanObjectType:.qr)
-        scanView.type = .qr
+        scanView.types = [.qr,.ean13,.ean8]
         scanView?.delegate = self
         // add it to man view
         self.view.addSubview(scanView!)
@@ -52,7 +52,7 @@ class ViewController: UIViewController {
 }
 
 extension ViewController:ScanDelegate{
-    func didScanedBarCode(value: String) {
+    func didScanedCode(value: String) {
         // called when the camera takes the value from barcode
         scanView?.stopRunning()
         self.view.backgroundColor = UIColor(hex:"21D364")
