@@ -12,6 +12,9 @@
 		1B5D199D21764BBA00E6FD29 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B5D199B21764BBA00E6FD29 /* Main.storyboard */; };
 		1B5D199F21764BBB00E6FD29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1B5D199E21764BBB00E6FD29 /* Assets.xcassets */; };
 		1B5D19A221764BBB00E6FD29 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B5D19A021764BBB00E6FD29 /* LaunchScreen.storyboard */; };
+		1B5D19AA2176572900E6FD29 /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5D19A92176572900E6FD29 /* ScanView.swift */; };
+		1B7871DC218A265A00D28175 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7871DB218A265A00D28175 /* LocationManager.swift */; };
+		1B8F32172177526E00C40E8C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F32162177526E00C40E8C /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +25,9 @@
 		1B5D199E21764BBB00E6FD29 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1B5D19A121764BBB00E6FD29 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1B5D19A321764BBB00E6FD29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1B5D19A92176572900E6FD29 /* ScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
+		1B7871DB218A265A00D28175 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		1B8F32162177526E00C40E8C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +60,25 @@
 		1B5D199621764BBA00E6FD29 /* ScanQR */ = {
 			isa = PBXGroup;
 			children = (
-				1B5D199721764BBA00E6FD29 /* AppDelegate.swift */,
-				1B5D199921764BBA00E6FD29 /* ViewController.swift */,
-				1B5D199B21764BBA00E6FD29 /* Main.storyboard */,
-				1B5D199E21764BBB00E6FD29 /* Assets.xcassets */,
-				1B5D19A021764BBB00E6FD29 /* LaunchScreen.storyboard */,
 				1B5D19A321764BBB00E6FD29 /* Info.plist */,
+				1B8F32182177560700C40E8C /* Example */,
+				1B5D19A92176572900E6FD29 /* ScanView.swift */,
+				1B7871DB218A265A00D28175 /* LocationManager.swift */,
 			);
 			path = ScanQR;
+			sourceTree = "<group>";
+		};
+		1B8F32182177560700C40E8C /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				1B5D199721764BBA00E6FD29 /* AppDelegate.swift */,
+				1B8F32162177526E00C40E8C /* Extensions.swift */,
+				1B5D19A021764BBB00E6FD29 /* LaunchScreen.storyboard */,
+				1B5D199E21764BBB00E6FD29 /* Assets.xcassets */,
+				1B5D199B21764BBA00E6FD29 /* Main.storyboard */,
+				1B5D199921764BBA00E6FD29 /* ViewController.swift */,
+			);
+			path = Example;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,6 +154,9 @@
 			files = (
 				1B5D199A21764BBA00E6FD29 /* ViewController.swift in Sources */,
 				1B5D199821764BBA00E6FD29 /* AppDelegate.swift in Sources */,
+				1B7871DC218A265A00D28175 /* LocationManager.swift in Sources */,
+				1B5D19AA2176572900E6FD29 /* ScanView.swift in Sources */,
+				1B8F32172177526E00C40E8C /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,7 +302,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6FL35NNCS8;
 				INFOPLIST_FILE = ScanQR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -290,6 +312,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = Guarana.ScanQR;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -299,7 +322,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6FL35NNCS8;
 				INFOPLIST_FILE = ScanQR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -307,6 +332,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = Guarana.ScanQR;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
