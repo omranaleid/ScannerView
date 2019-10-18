@@ -13,7 +13,6 @@
 		1B5D199F21764BBB00E6FD29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1B5D199E21764BBB00E6FD29 /* Assets.xcassets */; };
 		1B5D19A221764BBB00E6FD29 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B5D19A021764BBB00E6FD29 /* LaunchScreen.storyboard */; };
 		1B5D19AA2176572900E6FD29 /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5D19A92176572900E6FD29 /* ScanView.swift */; };
-		1B7871DC218A265A00D28175 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7871DB218A265A00D28175 /* LocationManager.swift */; };
 		1B8F32172177526E00C40E8C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F32162177526E00C40E8C /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -26,7 +25,6 @@
 		1B5D19A121764BBB00E6FD29 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1B5D19A321764BBB00E6FD29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1B5D19A92176572900E6FD29 /* ScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
-		1B7871DB218A265A00D28175 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		1B8F32162177526E00C40E8C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -63,7 +61,6 @@
 				1B5D19A321764BBB00E6FD29 /* Info.plist */,
 				1B8F32182177560700C40E8C /* Example */,
 				1B5D19A92176572900E6FD29 /* ScanView.swift */,
-				1B7871DB218A265A00D28175 /* LocationManager.swift */,
 			);
 			path = ScanQR;
 			sourceTree = "<group>";
@@ -154,7 +151,6 @@
 			files = (
 				1B5D199A21764BBA00E6FD29 /* ViewController.swift in Sources */,
 				1B5D199821764BBA00E6FD29 /* AppDelegate.swift in Sources */,
-				1B7871DC218A265A00D28175 /* LocationManager.swift in Sources */,
 				1B5D19AA2176572900E6FD29 /* ScanView.swift in Sources */,
 				1B8F32172177526E00C40E8C /* Extensions.swift in Sources */,
 			);

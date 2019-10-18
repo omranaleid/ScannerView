@@ -32,7 +32,7 @@ class ViewController: UIViewController {
         scanView?.configureVedioSession(onSuccess: {
             // successfully session created
             print("success configure")
-        }, onFailur: { (err) in
+        }, onFailure: { (err) in
             // [camera permissions] or [error detect vedio device (simulater)]
             print(err)
         })
