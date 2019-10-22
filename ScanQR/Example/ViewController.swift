@@ -29,17 +29,11 @@ class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         //this function will create the vedio session and start scanning
-        scanView?.configureVedioSession(onSuccess: {
-            // successfully session created
-            print("success configure")
-        }, onFailure: { (err) in
-            // [camera permissions] or [error detect vedio device (simulater)]
-            print(err)
-        })
+        scanView?.configureVedioSession(with: [.qr])
     }
     
     @IBAction func toggleFlash(_ sender: Any) {
-        if scanView!.isFlashOn {
+        if scanView!.flashStatus == .on {
             scanView!.flashOff()
         }else{
             scanView!.flashOn()
@@ -51,8 +45,12 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController:ScanDelegate{
-    func didScanedCode(value: String) {
+extension ViewController: ScanDelegate{
+    func scanError(error: Error) {
+        print(error.localizedDescription)
+    }
+    
+    func didScanCode(value: String) {
         // called when the camera takes the value from barcode
         scanView?.stopRunning()
         self.view.backgroundColor = UIColor(hex:"21D364")
@@ -60,12 +58,12 @@ extension ViewController:ScanDelegate{
             self.scanView?.startRunning()
         }
     }
-    func didStopCapture(stop: Bool, error: String?) {
+    func didStopCapture(stop: Bool, error: Error?) {
         // called when stop running
         print("stop running")
         print(stop)
     }
-    func didStartCapture(start: Bool, error: String?) {
+    func didStartCapture(start: Bool, error: Error?) {
         // called when start running
         print("start running")
         print(start)
