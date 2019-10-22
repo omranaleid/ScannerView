@@ -9,30 +9,54 @@
 import UIKit
 import AVFoundation
 
-enum FlashStatus{
+enum ScanError: Error {
+    case noCameraAvailable
+    case noScannedValue
+    case noSessionConfigured
+    case custom(String)
+}
+
+extension ScanError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .noCameraAvailable: return "No camera available"
+        case .noScannedValue: return "Error getting code value"
+        case .noSessionConfigured: return "There is no session, you should call configureVedioSession befor start capturing"
+        case .custom(let text): return text
+        }
+    }
+}
+
+
+enum FlashStatus {
     case on
     case off
 }
 
 protocol ScanDelegate: class {
-    func didScanedCode(value:String)
-    func didStartCapture(start:Bool,error:String?)
-    func didStopCapture(stop:Bool,error:String?)
-    func didChangeFlashStatus(status:FlashStatus)
+    func didScanCode(value: String)
+    func didStartCapture(start: Bool,error: Error?)
+    func didStopCapture(stop: Bool,error: Error?)
+    func didChangeFlashStatus(status: FlashStatus)
+    func scanError(error: Error)
 }
 
-@IBDesignable open class ScanView: UIView,AVCaptureMetadataOutputObjectsDelegate {
+@IBDesignable open class ScanView: UIView {
 
     private var captureSession:AVCaptureSession?
     private var videoPreviewLayer:AVCaptureVideoPreviewLayer?
     private var device:AVCaptureDevice?
-    var overlayView:UIView?
-    weak var delegate:ScanDelegate?
-    var isFlashOn = false
-    var isScanning : Bool = false
+    private(set) var isScanning : Bool = false
+    private(set) var flashStatus: FlashStatus = .off
+
+    var overlayView: UIView?
+    weak var delegate: ScanDelegate?
     var types: [AVMetadataObject.ObjectType] = [.qr]
     
-    func configureVedioSession(onSuccess:() -> Void, onFailure: (String)->Void) {
+    func configureVedioSession(with types: [AVMetadataObject.ObjectType]) {
+        
+        self.types = types
+        
         if let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) {
             device = captureDevice
             do {
@@ -54,100 +78,108 @@ protocol ScanDelegate: class {
                     overlayView?.center = self.center
                     self.bringSubviewToFront(overlayView!)
                 }
-                onSuccess()
                 isScanning = true
-            } catch let error{
-                onFailure(error.localizedDescription)
+            } catch let error {
+                delegate?.scanError(error: error)
                 return
             }
         }else{
-            onFailure("no camera available")
+            delegate?.scanError(error: ScanError.noCameraAvailable)
         }
     }
+}
 
+// MARK: AVCaptureMetadataOutputObjectsDelegate
+extension ScanView: AVCaptureMetadataOutputObjectsDelegate {
+    
     public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+        
+        // No code found
         if metadataObjects.count == 0 {
             return
         }
-        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-        if self.types.contains(metadataObj.type) {
-            if metadataObj.stringValue != nil {
-                let value = metadataObj.stringValue
-                if let objectId = value {
-                    delegate?.didScanedCode(value: objectId)
-                }else{
-                    print("error getting value")
-                }
-                return
-            }
-        }
-    }
-
-    
-    func startRunning() {
-        isScanning = true
-        guard let delegate  = self.delegate else {
-            print("delegate object is nil")
+        
+        // code found but maybe isn't the same type
+        guard let metadataObj = metadataObjects[0] as? AVMetadataMachineReadableCodeObject,
+        self.types.contains(metadataObj.type) else {
             return
         }
-        if captureSession != nil {
-            captureSession?.startRunning()
-            delegate.didStartCapture(start: true,error:nil)
-        }else{
-            delegate.didStartCapture(start: false,error:"you should call configureVedioSession befor run")
+        
+        // Code found and with the same type
+        if self.types.contains(metadataObj.type) {
+            guard let value = metadataObj.stringValue else {
+                delegate?.scanError(error: ScanError.noScannedValue)
+                return
+            }
+            
+            delegate?.didScanCode(value: value)
         }
+    }
+}
+
+// MARK: Public methods
+extension ScanView {
+    
+    func startRunning() {
+        changeRunningStatus(to: true)
     }
     
     func stopRunning()  {
-        isScanning = false
+       changeRunningStatus(to: false)
+    }
+    
+    func flashOn() {
+        changeFlashStatus(to: .on)
+    }
+    
+     func flashOff() {
+        changeFlashStatus(to: .off)
+    }
+}
+
+// MARK: Helpers
+private extension ScanView {
+    
+    func changeRunningStatus(to status: Bool) {
+        
+        isScanning = status
+        
         guard let delegate  = self.delegate else {
             print("delegate object is nil")
             return
         }
-        flashOff()
-        if captureSession != nil {
-            captureSession?.stopRunning()
+        
+        guard let session = captureSession else {
+            let err = ScanError.custom("you should call configureVedioSession befor run")
+            status ? delegate.didStartCapture(start: false, error: err) : delegate.didStopCapture(stop: false, error: err)
+            return
+        }
+        
+        if status {
+            session.startRunning()
+            delegate.didStartCapture(start: true, error: nil)
+        } else {
+            flashOff()
+            session.stopRunning()
             delegate.didStopCapture(stop: true, error: nil)
-        }else{
-            delegate.didStopCapture(stop: false,error:"you should call configureVedioSession befor")
         }
     }
     
-     func flashOn(){
-        guard let device = self.device else {
+    func changeFlashStatus(to status: FlashStatus) {
+        
+        guard let device = self.device, device.hasTorch else {
             return
         }
+        
         do{
-            if (device.hasTorch){
-                try device.lockForConfiguration()
-                device.torchMode = .on
-                device.flashMode = .on
-                device.unlockForConfiguration()
-                isFlashOn = true
-                delegate?.didChangeFlashStatus(status: .on)
-            }
-        }catch{
-            //DISABEL FLASH BUTTON HERE IF ERROR
-            print("Device tourch Flash Error ")
-        }
-    }
-    
-     func flashOff(){
-        guard let device = self.device else {
-            return
-        }
-        do{
-            if (device.hasTorch){
-                try device.lockForConfiguration()
-                device.torchMode = .off
-                device.flashMode = .off
-                device.unlockForConfiguration()
-                isFlashOn = false
-                delegate?.didChangeFlashStatus(status: .off)
-            }
-        }catch{
-            //DISABEL FLASH BUTTON HERE IF ERROR
-            print("Device tourch Flash Error ")
+            try device.lockForConfiguration()
+            device.torchMode = status == .on ? .on : .off
+            device.flashMode = status == .on ? .on : .off
+            device.unlockForConfiguration()
+            flashStatus = status
+            delegate?.didChangeFlashStatus(status: status)
+        } catch {
+            delegate?.scanError(error: error)
         }
     }
 }
